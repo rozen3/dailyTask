@@ -19,6 +19,7 @@ type DailyTask struct {
 	queryer               holidays.Queryer
 	ctx                   context.Context
 	cancel                context.CancelFunc
+	targetTime            time.Time
 }
 
 func NewDailyTask(name string, hour, min, sec, randomDelayMaxSeconds int, ignoreHoliday bool, handler func(), ctx context.Context) (*DailyTask, error) {
@@ -83,7 +84,10 @@ func (t *DailyTask) Start() {
 		// 等待到执行时间
 		rndDelay := time.Duration(rand.Intn(t.randomDelayMaxSeconds)) * time.Second
 		targetTime = targetTime.Add(rndDelay)
-		delay := targetTime.Sub(now.Truncate(time.Second))
+
+		t.targetTime = targetTime
+
+		delay := t.TimeToExecute()
 
 		timer := time.NewTimer(delay)
 
@@ -110,6 +114,14 @@ func (t *DailyTask) Start() {
 		}
 
 	}
+}
+
+func (t *DailyTask) TargetTime() time.Time {
+	return t.targetTime
+}
+
+func (t *DailyTask) TimeToExecute() time.Duration {
+	return t.TargetTime().Sub(time.Now().Truncate(time.Second))
 }
 
 func (t *DailyTask) String() string {
