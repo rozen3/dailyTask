@@ -1,4 +1,4 @@
-package go_task
+package dailyTask
 
 import (
 	"context"
