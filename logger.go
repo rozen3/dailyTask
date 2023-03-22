@@ -15,6 +15,11 @@ import (
 	"github.com/rozen3/xLog"
 )
 
+func init() {
+	LoggerInit("./dailyTask.log")
+	SetLogLevel(ParseLogLevel("debug"))
+}
+
 const (
 	LogMaxSize    = 1000
 	LogMaxAge     = 0

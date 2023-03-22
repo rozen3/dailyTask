@@ -8,11 +8,6 @@ import (
 	"time"
 )
 
-func init() {
-	LoggerInit("./dailyTask.log")
-	SetLogLevel(ParseLogLevel("debug"))
-}
-
 type DailyTask struct {
 	taskName              string
 	hour                  int    // 执行任务的小时
