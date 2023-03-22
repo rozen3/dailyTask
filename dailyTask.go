@@ -71,6 +71,11 @@ func (t *DailyTask) Close() error {
 }
 
 func (t *DailyTask) Start() {
+	Info("%s start", t)
+	defer func() {
+		Info("%t finished loop", t)
+	}()
+
 	for {
 		now := time.Now()
 		// 计算今天的任务执行时间
@@ -114,7 +119,6 @@ func (t *DailyTask) Start() {
 			Info("%s ctx done break", t)
 			return
 		}
-
 	}
 }
 
