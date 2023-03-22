@@ -50,7 +50,7 @@ func NewDailyTask(name string, hour, min, sec, randomDelayMaxSeconds int, ignore
 	if ignoreHoliday {
 		queryer, err := holidays.BundleQueryer()
 		if err != nil {
-			//Err("BundleQueryer failed: %s", err)
+			Err("BundleQueryer failed: %s", err)
 
 			return nil, err
 		}
@@ -89,6 +89,8 @@ func (t *DailyTask) Start() {
 
 		delay := t.TimeToExecute()
 
+		Info("%s target time %s, time to execute %s", t, targetTime, delay)
+
 		timer := time.NewTimer(delay)
 
 		select {
@@ -97,7 +99,7 @@ func (t *DailyTask) Start() {
 				// 检查跳过节假日
 				isHoliday, err := t.queryer.IsHoliday(time.Now())
 				if err != nil {
-					//log.Err("%s check holiday error: %s", t.taskName, err)
+					Err("%s check holiday error: %s", t.taskName, err)
 				} else {
 					if isHoliday { // 节假日跳过
 						break
@@ -105,11 +107,11 @@ func (t *DailyTask) Start() {
 				}
 			}
 
-			//log.Info("%s execute handler at %s", t, time.Now())
+			Info("%s execute handler at %s", t, time.Now())
 			t.handler()
 
 		case <-t.ctx.Done():
-			//log.Info("%s ctx done break", t)
+			Info("%s ctx done break", t)
 			return
 		}
 
